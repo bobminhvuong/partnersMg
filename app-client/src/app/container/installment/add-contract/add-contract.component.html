@@ -1,0 +1,227 @@
+<nz-modal [(nzVisible)]="isVisible" nzTitle="{{ dataEdit && dataEdit.id ? 'Cập nhật hợp Đồng' : 'Tạo hợp đồng' }}" (nzOnCancel)="handleCancel()" [nzFooter]="modalFooter" nzWidth="75%">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="customer_id">Khách hàng</nz-form-label>
+          <nz-form-control [nzSm]="11" [nzXs]="19">
+            <nz-select nzShowSearch nzAllowClear nzRequired nzPlaceHolder="Chọn khách hàng"
+              (ngModelChange)="AddCustomer($event)" formControlName="customer_id">
+              <nz-option *ngFor="let item of listCustomers" nzLabel="{{ item.name + ' - '+item.phone }}"
+                nzValue="{{ item.id }}"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validateForm.get('customer_id')?.dirty && validateForm.get('customer_id')?.errors">
+              Chọn khách hàng!
+            </nz-form-explain>
+          </nz-form-control>
+          <i class="text-primary" (click)="addNewCustomer()" nz-icon nz-size="" nzType="plus-circle" style="cursor: pointer;
+          position: relative;
+          top: 5px;
+          font-size: 24px;
+          transition: all 0.3s;
+          margin-left: 5px;"></i>
+        </nz-form-item>
+      </div>
+
+    </div>
+    <div *ngIf="customer && customer.id" class="row" style="margin-bottom: 10px;">
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6 mg-top-5">
+        <div class="offset-md-3">
+          <label for=""><b>Khách hàng:&nbsp;</b></label>
+          <span>{{ customer.name }}</span>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6 mg-top-5">
+        <div class="offset-md-3">
+          <label for=""> <b>Điện thoại:&nbsp;</b> </label>
+          <span>{{ customer.phone }}</span>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6 mg-top-5">
+        <div class="offset-md-3">
+          <label for=""> <b>Chứng minh:&nbsp;</b></label>
+          <span>{{ customer.identity_number }}</span>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6 mg-top-5">
+        <div class="offset-md-3">
+          <label for=""> <b>Địa chỉ:&nbsp;</b> </label>
+          <span>{{ customer.address }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="loan_price">Số tiền</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <!-- (keypress)="numberOnly($event)" -->
+            <input nz-input placeholder="Số tiền" [(ngModel)]="loan_price" [(appFormatVN)]="loan_price"
+              formControlName="loan_price" />
+            <nz-form-explain *ngIf="validateForm.get('loan_price')?.dirty && validateForm.get('loan_price')?.errors">
+              Số tiền không được để trống!
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="loan_date_start">Thời gian</nz-form-label>
+          <nz-form-control [nzSm]="7" [nzXs]="12">
+            <nz-date-picker style="width: 97%;" formControlName="loan_date_start" nzFormat="{{dateFormat}}"
+              nzPlaceHolder="Ngày vay">
+            </nz-date-picker>
+            <nz-form-explain
+              *ngIf="validateForm.get('loan_date_start')?.dirty && validateForm.get('loan_date_start')?.errors">
+              Chọn ngày bắt đầu!
+            </nz-form-explain>
+          </nz-form-control>
+          <nz-form-control [nzSm]="7" [nzXs]="12">
+            <nz-date-picker style="width: 100%;" formControlName="loan_date_end" nzFormat="{{dateFormat}}"
+              nzPlaceHolder="Ngày dự kiến trả">
+            </nz-date-picker>
+            <nz-form-explain
+              *ngIf="validateForm.get('loan_date_end')?.dirty && validateForm.get('loan_date_end')?.errors">
+              Chọn ngày kết thúc!
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="loan_rate" nzRequired>Lãi suất</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <div nz-row [nzGutter]="8">
+              <div nz-col [nzSpan]="12">
+
+                <input appOnlyNumber nz-input placeholder="Lãi suất" [(appFormatVN)]="loan_rate"
+                  formControlName="loan_rate" [(ngModel)]="loan_rate" style="width: 100%;" />
+              </div>
+              <div nz-col [nzSpan]="12">
+                <select class="ant-input" [(ngModel)]="loan_type" placeholder="Lãi theo" formControlName="loan_type">
+                  <option value="0">Ngày</option>
+                  <option value="1">Tháng</option>
+                </select>
+              </div>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="brokerage_amount">Chi phí mua giới</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <!-- (keypress)="numberOnly($event)" -->
+            <input nz-input placeholder="Chi phí"  [(ngModel)]="brokerage_amount" [(appFormatVN)]="brokerage_amount"
+              formControlName="brokerage_amount" />
+            <nz-form-explain *ngIf="validateForm.get('brokerage_amount')?.dirty && validateForm.get('brokerage_amount')?.errors">
+              Chi phí không được để trống!
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="note">Ghi chú</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <textarea formControlName="note" nz-input rows="2"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-upload class="upload-list-inline offset-sm-3" nzAction="{{API_IMG}}/api/fileUpload?pathImg=invoices"
+            nzListType="picture" [(nzFileList)]="images">
+            <div nz-button>
+              <span style="margin-top: 5px;"><i nz-icon nzType="upload"></i> Thêm hình ảnh</span>
+            </div>
+          </nz-upload>
+        </nz-form-item>
+      </div>
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="asset_id">Tài sản cầm cố</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-select nzAllowClear style="width: 100%;" *ngIf="dataSource && dataSource.asset"
+              (ngModelChange)="AddAssets($event)" [(ngModel)]="ipas" [ngModelOptions]="{standalone: true}">
+              <nz-option *ngFor="let item of  dataSource.asset" nzValue="{{ item.id }}" nzLabel="{{ item.name }}">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngFor="let item of lsAssets;let i = index">
+          <nz-form-label [nzSm]="8" [nzXs]="24">{{item.name}}</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="21">
+            <div nz-row>
+              <div nz-col [nzSpan]="20">
+                <!-- (ngModelChange)="changeInputAsset($event,i)" -->
+                <input appOnlyNumber nz-input placeholder="Số tiền" [(appFormatVN)]="item.price"
+                  [(ngModel)]="item.price" style="width: 100%;" [ngModelOptions]="{standalone: true}" />
+              </div>
+              <div nz-col [nzSpan]="4">
+                <i (click)="deleteAsset(i)" nz-icon class="text-danger" nzType="delete" style="cursor: pointer;
+                position: relative;
+                font-size: 24px;
+                transition: all 0.3s;
+                margin-left: 5px;"></i>
+              </div>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="phone">Người góp vốn</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="20">
+            <nz-select *ngIf="dataSource && dataSource.capital_user" nzShowSearch nzAllowClear
+              nzPlaceHolder="Chọn người góp vốn" (ngModelChange)="AddUser($event)" [(ngModel)]="ipvon"
+              [ngModelOptions]="{standalone: true}">
+
+              <nz-option *ngFor="let item of  dataSource.capital_user" nzLabel="{{ item.name }}"
+                nzValue="{{ item.id }}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngFor="let item of listCapital;let i = index">
+          <nz-form-label [nzSm]="8" [nzXs]="24">{{item.name}}</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <div nz-row>
+              <div nz-col [nzSpan]="12">
+                <!-- (ngModelChange)="changeInputCap($event)" -->
+                <input nz-input placeholder="Số tiền" [(appFormatVN)]="item.price" [(ngModel)]="item.price"
+                  style="width: 100%;" [ngModelOptions]="{standalone: true}" />
+              </div>
+              <div nz-col [nzSpan]="9">
+                <select class="ant-input" [(ngModel)]="item.money_source_id" [ngModelOptions]="{standalone: true}"
+                  placeholder="Lãi theo">
+                  <option *ngFor="let item of capital_sources" value="{{item.id}}">{{ item.name }}</option>
+                  <option value="1">Tiền mặt</option>
+                  <option value="2">Ngân hàng</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="3">
+                <i (click)="deleteUserCapital(i)" nz-icon nz-size="" nzType="delete" class="text-danger" style="cursor: pointer;
+                position: relative;
+                font-size: 24px;
+                transition: all 0.3s;
+                margin-left: 5px;"></i>
+              </div>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+
+  <ng-template #modalFooter>
+    <button [appPerm]="'admin'" *ngIf="dataEdit.status_id != 2 && dataEdit.status_id != 3" class="btn btn-primary btn-sm" (click)="submitForm()">{{ !dataEdit.id ? 'Tạo hợp đồng' : 'Cập nhật hợp đồng' }}</button>
+    <button class="btn btn-sm btn-light" (click)="handleCancel()">Đóng</button>
+  </ng-template>
+
+  <app-cou-customer *ngIf="isVisibleUser" [dataEdit]="dataUser" [isVisible]="isVisibleUser"
+    (closeModal)="closeModalUser($event)" class="fade in">
+  </app-cou-customer>
+
+</nz-modal>

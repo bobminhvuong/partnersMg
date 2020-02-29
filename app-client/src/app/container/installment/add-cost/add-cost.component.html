@@ -1,0 +1,104 @@
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()" nzWidth="50%">
+  <ng-template #modalTitle>
+    Thêm chi phí
+  </ng-template>
+  <ng-template #modalContent>
+    <div *ngIf="customer && customer.id" class="row" style="margin-bottom: 10px;">
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+        <label for=""><b>Khách hàng:&nbsp;</b></label>
+        <span>{{ customer.name }}</span>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-8 col-lg-6 ">
+        <label for=""> <b>Điện thoại:&nbsp;</b> </label>
+        <span>{{ customer.phone }}</span>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-4 col-lg-6">
+        <label for=""> <b>Chứng minh:&nbsp;</b></label>
+        <span>{{ customer.identity_number }}</span>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+        <label for=""> <b>Địa chỉ:&nbsp;</b> </label>
+        <span>{{ customer.address }}</span>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+        <label for=""> <b>Ngày vay:&nbsp;</b> </label>
+        <span>{{ formatDate(customer.created,'DD/MM/YYYY') }}</span>
+      </div>
+      <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+        <label for=""> <b>Số tiền vay:&nbsp;</b> </label>
+        <span>{{ formatCurrency(customer.loan_price) }} đ</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="box box-success">
+          <nz-table [nzData]="listOfData" [nzFrontPagination]="false" [nzShowPagination]="false"
+            [nzScroll]="{ y: '240px' }">
+            <thead>
+              <tr>
+                <th width="10%" class="text-center">STT</th>
+                <th width="25%" class="text-center">Chi phí</th>
+                <th width="55%">Ghi chú</th>
+                <th width="10%" class="text-center"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listOfData;let i= index">
+                <td class="text-center">
+                  <span>{{ i+1 }}</span>
+                </td>
+                <td class="text-right">{{ formatCurrency(item.price) }} đ</td>
+                <td>{{ item.note}}</td>
+                <td class="text-center">
+                  <i nz-icon nz-tooltip nzTitle="Xóa chi phí" (click)="confirmDeleteCost(item)" nzType="delete"
+                    class="text-danger iconAction" nzTheme="outline"></i>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+        <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="addCost()">
+          <nz-form-item>
+            <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="price">Chi phí
+            </nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+              <input nz-input placeholder="Số tiền" [(appFormatVN)]="brokerage_amount" formControlName="price" />
+              <nz-form-explain *ngIf="validateForm.get('price')?.dirty && validateForm.get('price')?.errors">
+                Chi phí không được để trống!
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired nzFor="note">Ghi chú
+            </nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+              <textarea rows="3" nz-input formControlName="note"></textarea>
+              <nz-form-explain *ngIf="validateForm.get('note')?.dirty && validateForm.get('note')?.errors">
+                Thêm ghi chú cho chi phí này
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <button class="offset-md-5" nz-button nzType="primary" type="submit" [nzLoading]="isLoadCost">Tạo chi
+                phí</button>
+            </div>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Đóng</button>
+  </ng-template>
+</nz-modal>
