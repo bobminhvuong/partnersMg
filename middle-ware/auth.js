@@ -1,89 +1,31 @@
 var jwt = require('./../utils/jwt');
-var fs = require('fs');
-var path = require('path');
-var authController = require('../controller/auth.controller');
-
+var auth = require('../service/auth.service');
+var config = require('./../config')
 exports.auth = function () {
     return function (req, res, next) {
-        var token = req.headers['x-access-token'];
+        var token = req.headers[config.TOKEN];
         if (token) {
             jwt.verify(token, function (err, decodedData) {
                 if (err) {
-                    res.status(401);
-                    res.json({
-                        message: 'Invalid Token'
-                    });
-                } else {
-                    var name = decodedData.name;
-
-                    authController.checkAuth({
-                        name: decodedData.name
+                    res.status(401).json({
+                        status: 0,
+                        message: 'Token đã hết hạn!'
                     })
-                        .then(function (user) {
-                            req.user = user;
-                            next();
-                        })
-                        .catch(function (err) {
-                            res.status(401);
-                            res.json({
-                                message: 'Invalid Token, User not found'
-                            });
-                        });
+                } else {
+                    var email = decodedData.email;
+                    auth.getUserByEmail(email).then(function (response) {
+                        req.user = response;
+                        next();
+                    }).catch(function (err) {
+                        res.status(401).json(err)
+                    });
                 }
-            })
-        } else {
-            res.status(401);
-            res.json({
-                message: "Not Authorized"
             });
+        } else {
+            res.status(401).json({
+                status: 0,
+                message: 'Không có phiên đăng nhập!'
+            })
         }
     }
 }
-
-// exports.auth = function () {
-//     return function (req, res, next) {
-//         var token = req.headers['x-access-token'];
-//         if (token) {
-//             jwt.verify(token, function (err, decodedData) {
-//                 if (err) {
-//                     res.status(401);
-//                     res.json({
-//                         message: 'Invalid Token'
-//                     });
-//                 } else {
-//                     var name = decodedData.name;
-//                     fs.readFile(path.join(__dirname, "../" + "users.json"), 'utf8', function (err, data) {
-//                         if (err) {
-//                             res.status(401);
-//                             res.json({
-//                                 message: 'Invalid Token'
-//                             });
-//                         } else {
-//                             var listUser = JSON.parse(data);
-//                             var user;
-//                             for (var i = 0; i < listUser.length; i++) {
-//                                 if (listUser[i].name == name) {
-//                                     user = listUser[i];
-//                                 }
-//                             }
-//                             if (user) {
-//                                 req.user = user;
-//                                 next();
-//                             } else {
-//                                 res.status(401);
-//                                 res.json({
-//                                     message: 'Invalid Token'
-//                                 });
-//                             }
-//                         }
-//                     });
-//                 }
-//             })
-//         } else {
-//             res.status(401);
-//             res.json({
-//                 message: "Not Authorized"
-//             });
-//         }
-//     }
-// }

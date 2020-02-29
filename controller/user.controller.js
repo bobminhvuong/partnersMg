@@ -1,101 +1,63 @@
-const db = require("./../models");
 var crypto = require('./../utils/crypto');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-var jwt = require('./../utils/jwt');
-
+const con = require('./../db');
+const { check, validationResult } = require('express-validator');
 
 module.exports = {
-    upsert: upsertUser,
+    createUser: createUser,
     getAllUser: getAllUser,
-    getUserById: getUserById,
-    updateUser: upsertUser,
+    updateUser: updateUser,
     deleteUser: deleteUser,
-    getCurrentUser: getCurrentUser,
-    getContact: getContact
 }
 
-async function getContact(req, res) {
-    var id = req.params.id;
-    db.contact.findAndCountAll({ where: { userId: id } }).then(r=>{
-        if(r){
-            res.send(r)
-        }else{
-            res.send([])
-        }
-    });
-  
+function deleteUser(req, res) {
+    return res.send();
+
 }
 
-function getCurrentUser(req, res) {
-    if (req.headers.token) {
-        jwt.verify(req.headers.token, async function (err, r) {
-            if (r) {
-                var user = await db.user.findOne({ where: { id: r.id } })
-                if (user) {
-                    res.send(user);
-                } else {
-                    res.send({ status: 500, msg: 'Not found user!' })
-                }
-            } else {
-                res.send({ status: 500, msg: 'Not found user!' })
-            }
-        });
-    } else {
-        res.send({ status: 500, msg: 'not found token' })
-    }
-}
+function updateUser(req, res) {
+    return res.send();
 
-async function deleteUser(req, res) {
-    try {
-        var result = await db.user.destroy({ where: { id: req.params.id } });
-        return result == 1 ? res.send({ msg: 'deleted user' }) : res.status(500).send({ msg: 'an error has occured trying to delete the user object' });
-
-    } catch (error) {
-        res.status(500).send({ msg: 'an error has occured trying to delete the user object' })
-    }
-}
-
-async function upsertUser(req, res) {
-    var user = req.body;
-    user.note = !user.note ? "" : user.note;
-
-    try {
-        if (user.id) {
-            var result = await db.user.update(user, { where: { id: user.id } })
-            const curUser = await db.user.findOne({ where: { id: user.id } });
-            return res.send(curUser);
-        } else {
-            user.salt = crypto.genSalt();
-            var us = await db.user.create(user)
-            if (us) res.send(us);
-        }
-    } catch (error) {
-        res.status(500).send({ msg: 'an error has occured trying to create or update the user object' })
-    }
-}
-async function getUserById(req, res) {
-    try {
-        var user = await db.user.findOne({ where: { id: req.params.id } })
-        res.send(user ? user : {});
-
-    } catch (error) {
-        res.status(500).send({ msg: 'an error has occured trying to get the user object' })
-    }
 }
 
 function getAllUser(req, res) {
+    let filter = req.filter;
+    let find = filter.find && filter.find != '' ?
+        `AND (us.fullname like '%${filter.find}%' ) 
+                OR us.phone like '%${ filter.find}%'
+                OR us.email like '%${ filter.find}%'`
+        : '';
+    let sql = `SELECT us.id, us.fullname, us.email, us.phone, us.address, us.status , us.created 
+                FROM users us WHERE 1 ${ find}
+                LIMIT (${filter.offset},${filter.offset})
+                `;
 
-    try {
-        var query = req.query;
-        if (query.filter) query.filter = JSON.parse(query.filter.replace('.$.', '%').replace('.$.', '%'));
-        db.user.findAndCountAll(query.filter).then(response => {
-            res.send(response)
-        }, err => {
-            res.status(500).send(err.msg);
+    let sqlCount = `SELECT count(us.id) as tt FROM users us WHERE 1 ${find}`;
+    con.query(sql, (err, res) => {
+        con.query(sqlCount, (err, c) => {
+            if (res) return res.send({ status: 1, message: 'oke', data: res, count: c.tt });
+            return res.send(err);
         })
-    } catch (error) {
-        res.status(400).send({ msg: 'Wrong syntax input!' });
-    }
-
+    })
+}
+function createUser(req, res) {
+    let user = req.body;
+    var salt = crypto.genSalt();
+    var request = {
+        fullname: user.fullname,
+        email: user.email,
+        phone: user.phone,
+        salt: salt,
+        password: crypto.hashWithSalt(req.body.password, salt),
+        DOB: user.DOB,
+        created: new Date()
+    };
+    con.query('INSERT INTO users SET ?', request, (err, r) => {
+        if (r) {
+            return res.send({
+                status: 1,
+                id: r.insertId,
+                message: 'Đăng kí thành công!'
+            })
+        }
+    })
 }

@@ -1,9 +1,10 @@
-exports.errorHandler = function () {
-  return function (err, req, res, next) {
-    if (err) {
-      res.status(err.statusCode || 500).send({
-        message: err.message
-      });
-    }
-  };
+const errorHandler = (err, req, res, next) => {
+  res.status(400).json({
+    status: 0,
+    code: err.code,
+    message: err.sqlMessage,
+    sql: err.sql
+  });
 };
+
+module.exports = errorHandler;
