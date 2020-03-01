@@ -48,16 +48,26 @@ function createUser(req, res) {
         phone: user.phone,
         salt: salt,
         password: crypto.hashWithSalt(req.body.password, salt),
-        DOB: user.DOB,
         created: new Date()
     };
-    con.query('INSERT INTO users SET ?', request, (err, r) => {
-        if (r) {
+    con.query('SELECT * FROM users u WHERE u.phone =? OR u.email = ?', [request.phone, request.email], (err, r) => {
+        if (err) return res.send(err);
+        if (r && r.length > 0) {
             return res.send({
-                status: 1,
-                id: r.insertId,
-                message: 'Đăng kí thành công!'
+                status: 0,
+                message: 'Email hoặc số điện thoại đã tồn tại!'
+            });
+        } else {
+            con.query('INSERT INTO users SET ?', request, (err, response) => {
+                if (r) {
+                    return res.send({
+                        status: 1,
+                        id: response.insertId,
+                        message: 'Đăng kí thành công!'
+                    })
+                }
             })
         }
     })
+
 }

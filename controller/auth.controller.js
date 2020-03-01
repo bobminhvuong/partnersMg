@@ -51,15 +51,29 @@ function login(req, res) {
 }
 
 function getCurrentUser(req, res) {
-    var token = req.headers[config.TOKEN];
+    let token = req.headers[config.TOKEN];
     jwt.verify(token, function (err, decodeData) {
         if (token && decodeData) {
-            var email = decodeData[0].email;
-            connection.query('SELECT * FROM users WHERE email="' + email + '"', function (err, response) {
+            con.query('SELECT * FROM users WHERE email="' + decodeData.email + '"', function (err, response) {
                 if (err) {
                     return res.send(err);
                 } else {
-                    return res.send(response[0]);
+                    let us = response[0];
+                    delete us.salt;
+                    delete us.password;
+
+                    con.query(`SELECT gr.name , gr.role FROM user_roles ur 
+                                JOIN group_roles as gr ON ur.group_role_id = gr.id WHERE 
+                                gr.active = 1 AND ur.active = 1 AND ur.user_id= ${us.id}`,
+                        (err, role) => {
+                            if (err) return res.send(err);
+                            us.roles = role;
+                            return res.send({
+                                status: 1,
+                                message: 'ok',
+                                data: us
+                            });
+                        });
                 }
             });
         } else {

@@ -1,0 +1,79 @@
+<form nz-form [formGroup]="validateForm" class="" (ngSubmit)="submitForm()">
+  <div nz-row class="ant-advanced-search-form ">
+
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12" style="border-bottom: 2px black solid;">
+      <h4 style="font-weight: bold;">Đăng kí tài khoản VIP</h4>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 offset-lg-1 " style="margin-top: 30px;">
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzMd]="24" [nzXs]="24" [nzLg]="8" nzRequired nzFor="email">Email tài khoản Partners
+          eToro</nz-form-label>
+        <nz-form-control [nzSm]="24" [nzXs]="24" [nzMd]="24" [nzLg]="12">
+          <input nz-input formControlName="email" id="email" />
+          <nz-form-explain *ngIf="validateForm.get('email')?.dirty && validateForm.get('email')?.errors">
+            Email không được để trống!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzMd]="24" [nzXs]="24" [nzLg]="8" nzRequired nzFor="username">User name tài khoản
+          Partners eToro
+        </nz-form-label>
+        <nz-form-control [nzSm]="24" [nzXs]="24" [nzMd]="24" [nzLg]="12">
+          <input nz-input  formControlName="username" id="username" />
+          <nz-form-explain *ngIf="validateForm.get('username')?.dirty && validateForm.get('username')?.errors">
+            Tài khoản không được để trống!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8  offset-lg-1">
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzMd]="24" [nzXs]="24" [nzLg]="8" nzRequired nzFor="email_transaction">Email tài khoản giao dịch eToro
+        </nz-form-label>
+        <nz-form-control [nzSm]="24" [nzXs]="24" [nzMd]="24" [nzLg]="12">
+          <input nz-input  formControlName="email_transaction" id="email_transaction" />
+          <nz-form-explain *ngIf="validateForm.get('email_transaction')?.dirty && validateForm.get('email_transaction')?.errors">
+            Email không được để trống!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzMd]="24" [nzXs]="24" [nzLg]="8" nzRequired nzFor="username_transaction">User name tài khoản giao
+          dịch eToro
+        </nz-form-label>
+        <nz-form-control [nzSm]="24" [nzXs]="24" [nzMd]="24" [nzLg]="12">
+          <input nz-input  formControlName="username_transaction" id="username_transaction" />
+          <nz-form-explain *ngIf="validateForm.get('username_transaction')?.dirty && validateForm.get('username_transaction')?.errors">
+            Tài khoản không được để trống!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="24" [nzMd]="24" [nzXs]="24" [nzLg]="8"  nzFor="note">Ghi chú
+        </nz-form-label>
+        <nz-form-control [nzSm]="24" [nzXs]="24" [nzMd]="24" [nzLg]="12">
+          <textarea formControlName="note" nz-input rows="2" placeholder="Ghi chú"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <div nz-row>
+        <div nz-col [nzSm]="24" [nzMd]="24" [nzXs]="24" [nzLg]="8">
+        </div>
+        <div nz-col [nzSm]="24" [nzXs]="24" [nzMd]="24" [nzLg]="12">
+          <div>
+            <strong>Lưu ý: Chỉ bấm gửi khi bạn đã thanh toán phí Partners</strong>
+            <div class="clearfix"></div>
+            <button nz-button nzType="primary" style="margin-top: 10px;">Đăng ký</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

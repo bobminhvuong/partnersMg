@@ -26,28 +26,18 @@ import { MainService } from './service/main.service';
 import { TableComponent } from './components/table/table.component';
 import { ImageCtrComponent } from './components/image-ctr/image-ctr.component';
 import { FileUploadService } from './service/fileUpload/file-upload.service';
-import { InstallmentComponent } from './container/installment/installment.component';
 import { UserComponent } from './container/user/user.component';
 import { CustomerComponent } from './container/customer/customer.component';
-import { AddContractComponent } from './container/installment/add-contract/add-contract.component';
-import { PaymoneyComponent } from './container/installment/paymoney/paymoney.component';
-import { ItmListComponent } from './container/installment/itm-list/itm-list.component';
 import { CouUserComponent } from './container/user/cou-user/cou-user.component';
 import { CouCustomerComponent } from './container/customer/cou-customer/cou-customer.component';
 import { ProfileComponent } from './container/profile/profile.component';
 import { AssetComponent } from './container/asset/asset.component';
-import { BdsComponent } from './container/bds/bds.component';
-import { AddBdsComponent } from './container/bds/add-bds/add-bds.component';
-import { SellBdsComponent } from './container/bds/sell-bds/sell-bds.component';
-import { AddCostComponent } from './container/installment/add-cost/add-cost.component';
-import { UserRateComponent } from './container/installment/user-rate/user-rate.component';
-import { InterestPaymentHistoryComponent } from './container/installment/interest-payment-history/interest-payment-history.component';
 import { OnlyNumberDirective } from './directives/only-number.directive';
 import { FormatVNDirective } from './directives/format-vn.directive';
-import { BadDebtComponent } from './container/installment/bad-debt/bad-debt.component';
-import { CapitalContributionComponent } from './container/installment/capital-contribution/capital-contribution.component';
-import { CapitalDetailComponent } from './container/installment/capital-contribution/capital-detail/capital-detail.component';
 import { PermDirective } from './directives/perm.directive';
+import { RegisterVipComponent } from './container/register-vip/register-vip.component';
+import { ContactComponent } from './container/contact/contact.component';
+import { ToolSaleComponent } from './container/tool-sale/tool-sale.component';
 
 registerLocaleData(en);
 
@@ -59,28 +49,17 @@ registerLocaleData(en);
     LoginComponent,
     TableComponent,
     ImageCtrComponent,
-    InstallmentComponent,
     UserComponent,
     CustomerComponent,
-    AddContractComponent,
-    PaymoneyComponent,
-    ItmListComponent,
     CouUserComponent,
     CouCustomerComponent,
     ProfileComponent,
     AssetComponent,
-    BdsComponent,
-    AddBdsComponent,
-    SellBdsComponent,
-    AddCostComponent,
-    UserRateComponent,
-    InterestPaymentHistoryComponent,
-    OnlyNumberDirective,
     FormatVNDirective,
-    BadDebtComponent,
-    CapitalContributionComponent,
-    CapitalDetailComponent,
-    PermDirective
+    PermDirective,
+    RegisterVipComponent,
+    ContactComponent,
+    ToolSaleComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 <div nz-row class="mgbt20">
   <div nz-col nzSpan="12">
-    <h3>Khách Hàng</h3>
+    <h3>Khách đào tạo</h3>
   </div>
   <div nz-col nzSpan="12">
     <div class="float-right">
@@ -34,45 +34,45 @@
         <thead>
           <tr>
             <th width="3%" class="text-center">STT</th>
-            <th width="15%" style="min-width: 150px;">
+            <th width="7%"  style="min-width: 100px;"class="text-center">Ngày tạo</th>
+            <th width="13%" style="min-width: 100px;">
               Họ tên
-            <th width="10%" style="min-width: 100px;" class="text-center">
+            <th width="9%" style="min-width: 100px;" class="text-center">
               Điện thoại
             </th>
-            <th width="10%" style="min-width: 100px;" class="text-center">
-              Chứng minh
+            <th width="7%" style="min-width: 100px;" class="text-center">
+              Mã GD
             </th>
-            <th width="10%" style="min-width: 100px;" class="text-center">
-              Ngày cấp
+            <th width="12%" style="min-width: 100px;" class="text-center">
+              Email GD
             </th>
+            
             <th width="10%" style="min-width: 100px;" class="text-center">
-              Nơi cấp
+              Telegram
+            </th>
+            <th width="8%" style="min-width: 50px;" class="text-center">
+              Phí học viên
+            </th>
+            <th width="13%" style="min-width: 100px;">
+              <span>Ghi chú</span>
             </th>
             <th width="7%" style="min-width: 100px;" class="text-center">
-              <span>Hình ảnh</span>
+              Trạng thái
             </th>
-            <th width="15%" style="min-width: 200px;">
-              <span>Địa chỉ</span>
-            </th>
-
-            <th width="10%" class="text-center"><span>Action</span></th>
+            <th width="7%" class="text-center"><span>Hành động</span></th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let data of ajaxTable.data;let i = index">
             <td class="text-center">{{ i+ 1}}</td>
-            <td>{{ data.name }}</td>
+            <td class="text-center">{{ formatDate(data.created,'DD/MM/YYYY HH:ii')}}</td>
+            <td>{{ data.fullname }}</td>
+            <td class="text-center">{{ data.transaction_code }}</td>
             <td class="text-center">{{ data.phone }}</td>
-            <td class="text-center">{{ data.identity_number }}</td>
-            <td class="text-center">{{ formatDate(data.identity_date)  }}</td>
-            <td class="text-center">{{ data.identity_issued_by  }}</td>
-            <td class="text-center">
-              <div *ngIf="data.identity_image && data.identity_image!=''">
-                <i (click)="handlePreviewImg(data.identity_image)" nz-icon nzType="file-image" class="text-prinary"
-                  style="font-size: 24px;" nzTheme="outline"></i>
-              </div>
-            </td>
-            <td>{{ data.address }}</td>
+            <td class="text-center">{{ data.email }}</td>
+            <td class="text-center">{{ data.username_telegram  }}</td>
+            <td class="text-right">{{ data.price_transaction  }}</td>
+            <td>{{ data.note }}</td>
             <td class="cttd" class="text-center">
               <div zn-row>
                 <i nz-icon nzType="edit" nz-tooltip nzTitle="Sửa khách hàng" class="iconAction text-warning"

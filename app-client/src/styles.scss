@@ -8,7 +8,7 @@
 }
 
 .ant-table-tbody>tr>td, .ant-table-thead>tr>th{
-  padding: 5px !important;
+  padding: 10px !important;
 }
 
 .title{
@@ -363,4 +363,11 @@
 
 a:not([href]):not([tabindex]) {
   color: #1890ff;
+}
+
+.ant-advanced-search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
 }

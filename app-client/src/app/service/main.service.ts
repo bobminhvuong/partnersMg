@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { throwError } from 'rxjs';
@@ -7,9 +8,10 @@ import { DOCUMENT } from '@angular/common';
   providedIn: 'root'
 })
 export class MainService {
-  private token = localStorage.getItem('token');
+  private token = localStorage.getItem('x-key-x-u-log');
   private origin = '';
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  private currentUser: any = null;
+  constructor(@Inject(DOCUMENT) private document: Document,private router: Router) {
     this.origin = this.document.location.origin;
   }
 
@@ -17,18 +19,25 @@ export class MainService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'token': this.token
+        'x-access-token': this.token
       })
     };
     return httpOptions;
   }
 
   getCurrentUser() {
-    let user = localStorage.getItem('x-key-x-u-log');
-    return  user ? JSON.parse(user): {};
+    return this.currentUser;
   }
 
-  getApikey(){
+  setCurrentUser(user){
+    this.currentUser = user;
+  }
+
+  logOut(){
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+  getApikey() {
     let user = JSON.parse(localStorage.getItem('x-key-x-u-log'));
     return user.api ? user.api : '';
   }

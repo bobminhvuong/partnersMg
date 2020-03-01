@@ -1,28 +1,27 @@
-<div class="login-container lightmode" [ngClass]="{ 'opacity': isLoading }" >
+<div class="login-container lightmode" [ngClass]="{ 'opacity': isLoading }">
   <div class="login-box animated fadeInDown">
-    <!-- <div class="login-logo"></div> -->
-    <div class="login-body">
+    <div class="login-logo"></div>
+    <div *ngIf="!is_register" class="login-body">
       <div class="login-title text-center"><strong style="font-weight: bold;">Đăng nhập</strong> </div>
-
       <form nz-form [formGroup]="validateForm" class="login-form form-horizontal" (ngSubmit)="submitForm()">
         <nz-form-item>
           <nz-form-control nzErrorTip="Bạn chưa nhập tài khoản!">
             <nz-input-group nzPrefixIcon="user">
-              <input type="text" nz-input formControlName="phone" autofocus placeholder="Phone" />
+              <input type="text" nz-input formControlName="username" autofocus placeholder="Email hoặc số điện thoại" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-control nzErrorTip="Bạn chưa nhập mật khẩu!">
             <nz-input-group nzPrefixIcon="lock">
-              <input type="password" nz-input formControlName="password" placeholder="Password" />
+              <input type="password" nz-input formControlName="password" placeholder="Mật khẩu" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-control>
             <label nz-checkbox formControlName="remember">
-              <span>Remember me</span>
+              <span>Nhớ mật khẩu</span>
             </label>
           </nz-form-control>
         </nz-form-item>
@@ -31,12 +30,82 @@
             <button style="width: 100%;" nz-button class="login-form-button" [nzType]="'primary'">Log in</button>
           </nz-form-control>
         </nz-form-item>
+
       </form>
+      <div class="login-subtitle">
+        Bạn chưa có tài khoản? <a [routerLink]="" (click)="registerForm(true)">Đăng ký ngay</a>
+      </div>
+    </div>
+
+    <div *ngIf="is_register" class="login-body fadeInDown">
+      <div class="login-title text-center"><strong style="font-weight: bold;">Đăng ký</strong> </div>
+      <form nz-form [formGroup]="validateFormRegister" class="login-form form-horizontal" (ngSubmit)="register()">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="user">
+              <input type="text" nz-input formControlName="fullname" autofocus placeholder="Họ tên" />
+            </nz-input-group>
+            <nz-form-explain
+              *ngIf="validateFormRegister.get('fullname')?.dirty && validateFormRegister.get('fullname')?.errors">Bạn
+              chưa nhập họ tên!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="mail">
+              <input type="email" nz-input formControlName="email" autofocus placeholder="Địa chỉ Email" />
+            </nz-input-group>
+            <nz-form-explain
+              *ngIf="validateFormRegister.get('email')?.dirty && validateFormRegister.get('email')?.errors">Bạn chưa
+              nhập địa chỉ Email!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="phone">
+              <input type="text" nz-input formControlName="phone" autofocus placeholder="Số điện thoại" />
+            </nz-input-group>
+            <nz-form-explain
+              *ngIf="validateFormRegister.get('phone')?.dirty && validateFormRegister.get('phone')?.errors">Bạn chưa
+              nhập số điện thoại!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="password" autofocus placeholder="Mật khẩu" />
+            </nz-input-group>
+            <nz-form-explain
+              *ngIf="validateFormRegister.get('password')?.dirty && validateFormRegister.get('password')?.errors">Bạn
+              chưa nhập mật khẩu!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <!-- <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="text" nz-input formControlName="confirmPassword" autofocus placeholder="Xác nhận mật khẩu" />
+            </nz-input-group>
+            <nz-form-explain *ngIf="validateFormRegister.get('confirmPassword')?.dirty && validateFormRegister.get('confirmPassword')?.errors">Nhập lại mật khẩu để xác nhận!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item> -->
+        <nz-form-item>
+          <nz-form-control>
+            <button style="width: 100%;margin-top: 30px;" nz-button class="login-form-button" [nzType]="'primary'">Đăng
+              ký</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+      <div class="login-subtitle">
+        <a [routerLink]="" (click)="registerForm(false)">Đăng nhập</a>
+      </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="isLoading"  style="z-index: 1000;position: fixed; width: 100%;height: 100%;opacity: 1;" class="text-center">
+<div *ngIf="isLoading" style="z-index: 1000;position: fixed; width: 100%;height: 100%;opacity: 1;" class="text-center">
   <div style="margin-top: 200px;height: 100%;">
     <div class="loader">
       <svg viewBox="0 0 80 80">

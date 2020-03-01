@@ -28,35 +28,18 @@ export class CouCustomerComponent implements OnInit {
     private message: NzMessageService) { }
 
   ngOnInit() {
-    if (this.dataEdit && this.dataEdit.identity_date) {
-      this.dataEdit.identity_date = new Date(this.dataEdit.identity_date);
-    }
 
     this.API_IMG = environment.APICURRENTSERVE;
     this.validateForm = this.fb.group({
-      name: [null, [Validators.required]],
-      phone: [null, [Validators.required]],
-      identity_date: [this.dataEdit && this.dataEdit.identity_date ? this.dataEdit.identity_date : null, [Validators.required]],
-      identity_issued_by: [null, [Validators.required]],
-      identity_number: [null, [Validators.required]],
-      address: [null],
+      fullname: [this.dataEdit.fullname ? this.dataEdit.fullname : null, [Validators.required]],
+      phone: [this.dataEdit.phone ? this.dataEdit.phone : ''],
+      email: [this.dataEdit.email ? this.dataEdit.phone : null, [Validators.required]],
+      transaction_code: [this.dataEdit.transaction_code ? this.dataEdit.transaction_code : null, [Validators.required]],
+      username_telegram: [this.dataEdit.username_telegram ? this.dataEdit.username_telegram : null],
+      price_transaction: [this.dataEdit.username_telegram ? this.dataEdit.username_telegram : 0],
+      note: [null],
+      active: [this.dataEdit.active ? this.dataEdit.active : true],
     });
-    if (this.dataEdit && this.dataEdit.identity_image && this.dataEdit.identity_image != '') {
-      this.avatar = [{
-        uid: 1,
-        url: this.API_IMG + '/' + this.dataEdit.identity_image,
-        name: 'Hình ảnh',
-        response: {
-          urlImage: this.API_IMG + '/' + this.dataEdit.identity_image
-        }
-      }]
-    }
-  }
-
-  handleChangeImg(e) {
-    if (this.avatar.length > 1) {
-      this.avatar = [this.avatar[1]];
-    }
   }
 
   handleCancel(): void {
@@ -70,11 +53,10 @@ export class CouCustomerComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if (this.validateForm.status === 'VALID') {
-      
+
       let client = this.validateForm.value;
       client = { ...this.dataEdit, ...client };
-      client.identity_image = this.avatar.length > 0 ? this.avatar[0].response.urlImage : '';
-      client.identity_date = moment(client.identity_date).format('DD/MM/YYYY');
+      
       this.customerSV.updateOrCreateCustomer(client).subscribe(r => {
         if (r && r.status == 1) {
           this.message.create('success', this.dataEdit && this.dataEdit.id ? 'Cập nhật thành công!' : 'Tạo khách hàng thành công!');

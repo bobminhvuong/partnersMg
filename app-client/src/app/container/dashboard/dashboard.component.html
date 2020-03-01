@@ -1,172 +1,57 @@
-<nz-skeleton [nzLoading]="loading" [nzActive]="true" [nzParagraph]="{ rows: 12 }"></nz-skeleton>
+<div class="container ant-advanced-search-form">
 
-<div [appPerm]="'admin'" *ngIf="dataReport && !loading">
-    <div class="row">
-
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 10px;">
-            <button nz-button nzType="primary" class="float-right" (click)="getReport()">
-                <i nz-icon nzType="filter" nzTheme="outline"></i> Lọc
-            </button>
-
-            <nz-range-picker [nzRanges]="ranges1" class="float-right" [(ngModel)]="dateSort"  ></nz-range-picker>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-            <!-- START WIDGET CONCTACT -->
-            <div class="widget widget-default widget-item-icon">
-                <div class="widget-item-left">
-                    <span class="fa fa-file-invoice-dollar text-warning"></span>
-                </div>
-                <div class="widget-data">
-                    <div class="widget-int num-count">{{ dataReport.total_loan_price | number }} đ</div>
-                    <div class="widget-title">TIỀN CHO VAY</div>
-                    <div class="widget-subtitle">Tổng số tiền đã cho vay</div>
-                </div>
-            </div>
-            <!-- END WIDGET CONCTACT -->
-        </div>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-            <!-- START WIDGET CONCTACT -->
-            <div class="widget widget-default widget-item-icon">
-                <div class="widget-item-left">
-                    <span class="fa fa-file-invoice-dollar text-success"></span>
-                </div>
-                <div class="widget-data">
-                    <div class="widget-int num-count">{{ dataReport.total_pay | number }} đ</div>
-                    <div class="widget-title">TIỀN LÃI</div>
-                    <div class="widget-subtitle">Tổng tiền lãi thu về</div>
-                </div>
-            </div>
-            <!-- END WIDGET CONCTACT -->
-        </div>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-            <!-- START WIDGET CONCTACT -->
-            <div class="widget widget-default widget-item-icon">
-                <div class="widget-item-left">
-                    <span class="fa fa-wrench text-danger"></span>
-                </div>
-                <div class="widget-data">
-                    <div class="widget-int num-count">{{ dataReport.total_cashbook | number }} đ</div>
-                    <div class="widget-title">CHI PHÍ</div>
-                    <div class="widget-subtitle">Tổng chi phí hợp đồng</div>
-                </div>
-            </div>
-            <!-- END WIDGET CONCTACT -->
-        </div>
-
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-            <!-- START WIDGET CONCTACT -->
-            <div class="widget widget-default widget-item-icon">
-                <div class="widget-item-left">
-                    <span class="fa fa-file-signature"></span>
-                </div>
-                <div class="widget-data">
-                    <div class="widget-int num-count">{{ dataReport.total_invoice | number}}</div>
-                    <div class="widget-title">Hợp đồng</div>
-                    <div class="widget-subtitle">Tổng hợp đồng đã được lập</div>
-                </div>
-            </div>
-            <!-- END WIDGET CONCTACT -->
-        </div>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-            <!-- START WIDGET CONCTACT -->
-            <div class="widget widget-default widget-item-icon">
-                <div class="widget-item-left">
-                    <span class="fa fa-clock" style="color: #3380CB;"></span>
-                </div>
-                <div class="widget-data">
-                    <div class="widget-int num-count">{{ dataReport.total_day_type | number }}</div>
-                    <div class="widget-title">Hợp đồng Ngày</div>
-                    <div class="widget-subtitle">Tổng hợp đồng theo ngày</div>
-                </div>
-            </div>
-            <!-- END WIDGET CONCTACT -->
-        </div>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-            <!-- START WIDGET CONCTACT -->
-            <div class="widget widget-default widget-item-icon">
-                <div class="widget-item-left">
-                    <span class="fa fa-calendar-alt" style="color: #33CBCB;"></span>
-                </div>
-                <div class="widget-data">
-                    <div class="widget-int num-count">{{ dataReport.total_month_type  | number}}</div>
-                    <div class="widget-title">Hợp đồng tháng</div>
-                    <div class="widget-subtitle">Tổng hợp đồng theo tháng</div>
-                </div>
-            </div>
-            <!-- END WIDGET CONCTACT -->
-        </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12" style="border-bottom: 2px black solid;">
+        <h4 style="font-weight: bold;">Hướng dẫn đăng ký Partners Vip tại PAT</h4>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <div class="box box-success">
-                <div class="box-body ">
-                    <div class="ant-table-body">
-                        <table class="table table-bordered" style="width: 100%;">
-                            <thead class=" ant-table-thead  ">
-                                <tr>
-                                    <th class="text-center">Hợp đồng</th>
-                                    <th class="text-center">Trạng thái</th>
-                                </tr>
-                            </thead>
-                            <tbody class="ant-table-tbody">
-                                <tr class="ant-table-row">
-                                    <td> <b>Hợp đồng ngày sắp đến hạn</b> </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-warning">
-                                            {{dataReport.total_near_over_day | number}}
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="ant-table-row">
-                                    <td><b>Hợp đồng tháng sắp đến hạn</b></td>
-                                    <td class="text-center">
-                                        <span class="badge badge-warning">
-                                            {{dataReport.total_near_over_month | number}}
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="ant-table-row">
-                                    <td><b>Tổng hợp đồng sắp đến hạn</b></td>
-                                    <td class="text-center">
-                                        <span class="badge badge-warning">
-                                            {{dataReport.total_near_interest_pay | number}}
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="ant-table-row">
-                                    <td><b>Tổng hợp đồng nợ xấu</b></td>
-                                    <td class="text-center">
-                                        <span class="badge badge-danger">
-                                            {{dataReport.total_bad | number}}
-                                        </span>
-
-                                    </td>
-                                </tr>
-                                <tr class="ant-table-row">
-                                    <td><b>Tổng hợp đồng quá hạn</b></td>
-                                    <td class="text-center">
-                                        <span class="badge badge-danger">
-                                            {{dataReport.total_over | number}}
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr class="ant-table-row">
-                                    <td><b>Tổng hợp đồng hoàn tất</b></td>
-                                    <td class="text-center">
-                                        <span class="badge badge-success">
-                                            {{dataReport.total_finish | number}}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="mg-top">
+            <h5>1. Đăng ký tài khoản Partners eToro theo link sau: (nếu đã có tài khoản thì bỏ qua bước này)</h5>
+            <div style="margin-left: 20px;">
+                <p>Link: <a href="http://www.etoro.com/TJoinT2_A83700.aspx">http://www.etoro.com/TJoinT2_A83700.aspx</a>
+                </p>
+                <p>Hướng dẫn xác minh tài khoản Partners: <a
+                        href="https://drive.google.com/open?id=1K5uEe70lnCbA96GFZL-Hax6HbVhszjCE">https://drive.google.com/open?id=1K5uEe70lnCbA96GFZL-Hax6HbVhszjCE</a>
+                </p>
+            </div>
+        </div>
+        <div class="mg-top">
+            <h5>2. Đăng ký tài khoản Partners eToro theo link sau: (nếu đã có tài khoản thì bỏ qua bước này)</h5>
+            <div style="margin-left: 20px;">
+                <a href="http://partners.etoro.com/A83700_TClick.aspx"></a>
+                <p>Xác minh tài khoản giao dịch theo hướng dẫn sau:</p>
+                <p><b>Lưu ý quan trọng: </b>Địa chỉ nhập trên eToro phải là địa chỉ trên bằng lái xe (Nếu không có bằng
+                    lái thì
+                    có thể ra ngân hang nạp tiền vào tài khoản ngân hàng của bạn và ghi địa chỉ trên giấy nạp tiền, Chụp
+                    lại sau
+                    khi đã có mộc đỏ của ngân hang, up lên eToro để xác minh địa chỉ).
+                    Bời vì bước nhập địa chỉ ở phần đầu, các bạn hay nhập địa chỉ trên CMND dẫn đến tk lâu xác minh hoặc
+                    ko được
+                    xác minh. Nhắc lại ko nhập địa chỉ trên CMND mà nhập địa chỉ trên bằng lái xe hoặc giấy tờ mà bạn sẽ
+                    dùng để
+                    xác minh địa chỉ)
+                </p>
+                <a href="https://youtu.be/JvqzYvDWcTs">https://youtu.be/JvqzYvDWcTs</a>
             </div>
         </div>
 
+        <div class="mg-top">
+            <h5>3. Nạp tiền vào tài khoản giao dịch tối thiểu 220$, giao dịch đủ 10$ phí. (1 lệnh Buy EU 100U đòn bẫy
+                x400,
+                hoặc chia nhỏ thành nhiều lệnh)
+            </h5>
+        </div>
+        <div class="mg-top">
+            <h5>4. Thanh toán phí Partners</h5>
+            <div style="margin-left: 20px;">
+                <p>Chuyển khoản vào số thẻ sau: Lưu ý chọn mục chuyển vào số thẻ (không phải số tài khoản)</p>
+                <p>9704229237471649</p>
+                <p>(Ghi chú chuyển tiền: [User name tk partners] + sdt Số tiền: 150$ x tỷ giá 23,000 (3 tháng Partners
+                    Vip)</p>
+            </div>
+        </div>
+        <div class="mg-top">
+            <h5>5. Nhập thông tin 2 tài khoản trên vào mục “Đăng ký Vip” và chờ được duyệt.</h5>
+        </div>
     </div>
 </div>

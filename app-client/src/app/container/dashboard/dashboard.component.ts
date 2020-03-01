@@ -33,17 +33,6 @@ export class DashboardComponent implements OnInit {
   }
 
   getReport() {
-    this.loading = true;
-    let filter = {
-      from: this.dateSort && this.dateSort[0] ? moment(this.dateSort[0]).format('DD/MM/YYYY') : '',
-      to: this.dateSort && this.dateSort[1] ? moment(this.dateSort[1]).format('DD/MM/YYYY') : ''
-    };
-
-    this.reportSv.getReportDashboar(filter).subscribe(r => {
-      if (r && r.status == 1) {
-        this.dataReport = r.data;
-        this.loading = false;
-      }
-    })
+   
   }
 }

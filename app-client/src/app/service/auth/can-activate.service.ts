@@ -10,8 +10,6 @@ export class CanActivateService implements CanActivate {
   constructor(private router: Router,private mainSV: MainService) { }
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     let tokenUser = localStorage.getItem('x-key-x-u-log');
-    let user = tokenUser ? JSON.parse(tokenUser) : {};
-
     if(next.data.role == 'LOGIN'){
       if (!tokenUser) {
         this.router.navigate(['']);
@@ -19,9 +17,8 @@ export class CanActivateService implements CanActivate {
       return tokenUser ? true : false;
     }
     
-    if(next.data && user && (user.type == 'admin' || next.data.role == user.type)){
+    if(next.data && tokenUser ){
       return true;
     }
-   
   }
 }

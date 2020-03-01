@@ -1,3 +1,4 @@
+import { LoginService } from './../../service/auth/login.service';
 import { MainService } from './../../service/main.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';
@@ -21,20 +22,25 @@ export class MainComponent implements OnInit {
   // changeTrigger(): void {
   //   this.triggerTemplate = this.customTrigger;
   // }
-  private currentUser: any;
 
-  constructor(private router: Router, private globalData: GlobalDataService, private mainSV: MainService) { 
+  constructor(private router: Router, private globalData: GlobalDataService, private mainSV: MainService, private authSV: LoginService) {
   }
 
   ngOnInit() {
-    // const token = localStorage.getItem('token');
-    // this.currentUser = jwt_decode(token);
-    // this.globalData.setCurrentUser(this.currentUser);
-
-    this.user = this.mainSV.getCurrentUser();
     this.menus = this.getMenu();
     this.currentUrl = this.router.url;
+    this.getCurrentUser();
 
+  }
+  getCurrentUser() {
+    this.authSV.getCurrentUser().subscribe(r => {
+      if (r && r.status == 1) {
+        this.user = r.data;
+        this.mainSV.setCurrentUser(r.data);
+      } else {
+        this.mainSV.logOut();
+      }
+    })
   }
 
   getMenu() {
@@ -46,81 +52,58 @@ export class MainComponent implements OnInit {
         icon: 'home'
       },
       {
-        title: 'Hợp đồng',
+        title: 'Đăng ký VIP',
+        url: '/manager/register-vip',
+        role: 'admin',
+        icon: 'crown'
+      },
+      {
+        title: 'Công cụ sales',
+        url: '/manager/register-sales',
+        role: 'admin',
+        icon: 'tool'
+      },
+      {
+        title: 'Khách đào tạo',
         url: '',
         role: 'user',
-        icon: 'pay-circle',
-        subMenu: [
-          {
-            title: 'Danh sách hợp đồng',
-            url: '/manager/installment',
-            role: 'user',
-          },{
-            title: 'Lịch sử đóng lãi',
-            url: '/manager/installment/pay-interest-history',
-            role: 'admin'
-          },{
-            title: 'Hợp đồng quá hạn',
-            url: '/manager/installment/bad-debt',
-            role: 'admin'
-          },{
-            title: 'Báo cáo góp vốn',
-            url: '/manager/installment/capital-contribution',
-            role: 'user'
-          }
-        ]
-      },
-      // {
-      //   title: 'Bất động sản',
-      //   url: '',
-      //   role: ['admin'],
-      //   icon: 'home',
-      //   subMenu: [
-      //     {
-      //       title: 'Nhà đất',
-      //       url: '/manager/bds',
-      //       role: ['admin'],
-      //     }
-      //   ]
-      // },
-      // {
-      //   title: 'Tài sản',
-      //   url: '',
-      //   icon: 'hdd',
-      //   role: ['admin'],
-      //   subMenu: [
-      //     {
-      //       title: 'Danh sách',
-      //       url: '/manager/assets',
-      //       role: ['admin'],
-      //     }
-      //   ]
-      // },
-      {
-        title: 'Nhân viên',
-        url: '',
-        icon: 'user',
-        role: 'admin',
-        subMenu: [
-          {
-            title: 'Danh sách',
-            url: '/manager/user',
-            role: 'admin',
-          }
-        ]
-      },
-      {
-        title: 'Khách hàng',
-        url: '',
         icon: 'usergroup-add',
-        role: 'admin',
         subMenu: [
           {
-            title: 'Danh sách',
-            url: '/manager/customer',
-            role: 'admin',
+            title: 'Danh sách khách',
+            url: '/manager/customers',
+            role: 'user',
+          }, {
+            title: 'Chuyển khách',
+            url: '/manager/tranfer-customers',
+            role: 'admin'
           }
         ]
+      },
+      {
+        title: 'Người dùng',
+        url: '',
+        role: 'admin',
+        icon: 'user',
+        subMenu: [
+          {
+            title: 'Đối tác',
+            url: '/manager/user',
+            role: 'user',
+          },
+          {
+            title: 'Gia hạn VIP',
+            url: '/manager/user',
+            role: 'user',
+          }
+        ]
+      },
+
+      {
+        title: 'Liên hệ',
+        url: '/manager/contact',
+        role: 'admin',
+        icon: 'phone'
       }
     ]
   }
@@ -135,7 +118,6 @@ export class MainComponent implements OnInit {
   }
 
   logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    this.mainSV.logOut();
   }
 }
